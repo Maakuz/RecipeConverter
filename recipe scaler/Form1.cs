@@ -89,29 +89,32 @@ namespace recipe_scaler
 
             foreach (DataGridViewRow dataGridViewRow in dataGridView.Rows)
             {
-                string val = (string)dataGridViewRow.Cells[2].Value;
-                if (val == "ml")
+                string unit = (string)dataGridViewRow.Cells[2].Value;
+                double val = Double.Parse(dataGridViewRow.Cells[1].Value.ToString());
+                if (unit == "ml")
                 {
                     dataGridViewRow.Cells[2].Value = "cups";
-                    dataGridViewRow.Cells[1].Value = Double.Parse(dataGridViewRow.Cells[1].Value.ToString()) / MLINCUP;
+                    dataGridViewRow.Cells[1].Value = Math.Round(val / MLINCUP, 2);
                 }
 
-                else if (val == "cups")
+                else if (unit == "cups")
                 {
                     dataGridViewRow.Cells[2].Value = "ml";
-                    dataGridViewRow.Cells[1].Value = Double.Parse(dataGridViewRow.Cells[1].Value.ToString()) * MLINCUP;
+                    dataGridViewRow.Cells[1].Value = Math.Round(val * MLINCUP);
                 }
 
-                else if (val == "g")
+                else if (unit == "g")
                 {
+                    
                     dataGridViewRow.Cells[2].Value = "oz";
-                    dataGridViewRow.Cells[1].Value = Double.Parse(dataGridViewRow.Cells[1].Value.ToString()) / GINOZ;
+                    dataGridViewRow.Cells[1].Value = Math.Round(val / GINOZ, 2);
+                    
                 }
 
-                else if (val == "oz")
+                else if (unit == "oz")
                 {
                     dataGridViewRow.Cells[2].Value = "g";
-                    dataGridViewRow.Cells[1].Value = Double.Parse(dataGridViewRow.Cells[1].Value.ToString()) * GINOZ;
+                    dataGridViewRow.Cells[1].Value = Math.Round(val * GINOZ);
                 }
             }
         }
@@ -130,6 +133,12 @@ namespace recipe_scaler
         {
             textItem.Text = "";
             textItem.ForeColor = Color.Black;
+        }
+
+        private void textItem_Leave(object sender, EventArgs e)
+        {
+            textItem.Text = "Enter item and press Enter";
+            textItem.ForeColor = Color.Gray;
         }
 
         private void textItem_KeyDown(object sender, KeyEventArgs e)
@@ -151,5 +160,7 @@ namespace recipe_scaler
 
             }
         }
+
+
     }
 }

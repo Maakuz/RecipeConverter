@@ -64,6 +64,7 @@ namespace recipe_scaler
             this.textItem.Text = "Enter item and press Enter";
             this.textItem.Enter += new System.EventHandler(this.textItem_Enter);
             this.textItem.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textItem_KeyDown);
+            this.textItem.Leave += new System.EventHandler(this.textItem_Leave);
             // 
             // textAmount
             // 
