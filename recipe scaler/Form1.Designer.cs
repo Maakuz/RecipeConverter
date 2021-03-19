@@ -40,6 +40,7 @@ namespace recipe_scaler
             this.unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnPiece = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.comboItems = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,10 +56,14 @@ namespace recipe_scaler
             // 
             // textItem
             // 
-            this.textItem.Location = new System.Drawing.Point(12, 12);
+            this.textItem.ForeColor = System.Drawing.SystemColors.WindowFrame;
+            this.textItem.Location = new System.Drawing.Point(336, 244);
             this.textItem.Name = "textItem";
-            this.textItem.Size = new System.Drawing.Size(239, 20);
+            this.textItem.Size = new System.Drawing.Size(178, 20);
             this.textItem.TabIndex = 1;
+            this.textItem.Text = "Enter item and press Enter";
+            this.textItem.Enter += new System.EventHandler(this.textItem_Enter);
+            this.textItem.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textItem_KeyDown);
             // 
             // textAmount
             // 
@@ -79,7 +84,7 @@ namespace recipe_scaler
             // 
             // btnSystem
             // 
-            this.btnSystem.Location = new System.Drawing.Point(431, 10);
+            this.btnSystem.Location = new System.Drawing.Point(439, 10);
             this.btnSystem.Name = "btnSystem";
             this.btnSystem.Size = new System.Drawing.Size(75, 23);
             this.btnSystem.TabIndex = 4;
@@ -139,14 +144,26 @@ namespace recipe_scaler
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(143, 65);
             this.label1.TabIndex = 7;
-            this.label1.Text = "Saker jag önskar den gjorde:\r\navrundade någorlunda.\r\nskalade recept\r\nsparade ingr" +
-    "edienser\r\nsparade recept\r\n";
+            this.label1.Text = "Saker jag önskar den gjorde:\r\navrundade någorlunda.\r\nskalade recept\r\ntog bort ing" +
+    "redienser\r\nsparade recept\r\n";
+            // 
+            // comboItems
+            // 
+            this.comboItems.BackColor = System.Drawing.SystemColors.Window;
+            this.comboItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboItems.FormattingEnabled = true;
+            this.comboItems.Location = new System.Drawing.Point(12, 12);
+            this.comboItems.Name = "comboItems";
+            this.comboItems.Size = new System.Drawing.Size(239, 21);
+            this.comboItems.Sorted = true;
+            this.comboItems.TabIndex = 9;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(526, 516);
+            this.Controls.Add(this.comboItems);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnPiece);
             this.Controls.Add(this.dataGridView);
@@ -176,6 +193,7 @@ namespace recipe_scaler
         private System.Windows.Forms.DataGridViewTextBoxColumn amount;
         private System.Windows.Forms.DataGridViewTextBoxColumn unit;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboItems;
     }
 }
 
