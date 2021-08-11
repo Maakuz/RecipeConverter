@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -8,15 +9,19 @@ using System.Windows.Forms;
 
 namespace recipe_scaler
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
 
         const double MLINCUP = 236.588237;
         const double GINOZ = 28.3495231;
         const string ITEMSFILE = "items.db";
-        Encoding encoding = Encoding.UTF8;
+        readonly Encoding encoding = Encoding.UTF8;
+        decimal prevPercentage = 100;
+        
+        
+        
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             loadFiles();
@@ -31,9 +36,13 @@ namespace recipe_scaler
 
             string item = sr.ReadLine();
             List<string> items = new List<string>();
+            List<int> weights = new List<int>();
             while (item != null)
             {
-                items.Add(item);
+                string[] strings = item.Split(';');
+
+                items.Add(strings[0]);
+                weights.Add(int.Parse(strings[1]));
                 item = sr.ReadLine();
             }
             sr.Close();
@@ -147,7 +156,7 @@ namespace recipe_scaler
             {
                 StreamWriter sw = new StreamWriter(ITEMSFILE, true, encoding);
 
-                sw.WriteLine(textItem.Text);
+                sw.WriteLine(textItem.Text + ";");
                 sw.Close();
                 loadFiles();
 
@@ -161,6 +170,22 @@ namespace recipe_scaler
             }
         }
 
+        private void btnItemDB_Click(object sender, EventArgs e)
+        {
+            ItemDB db = new ItemDB();
+            db.Show();
+        }
 
+        private void numericUpDownScale_ValueChanged(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in this.dataGridView.Rows)
+            {
+                decimal orig = Decimal.Parse(row.Cells[1].Value.ToString()) / this.prevPercentage * (decimal)100;
+                row.Cells[1].Value = Math.Round(orig * this.numericUpDownScale.Value * (decimal)0.01, 2);
+            }
+
+
+            prevPercentage = this.numericUpDownScale.Value;
+        }
     }
 }

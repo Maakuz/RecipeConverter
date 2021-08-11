@@ -1,7 +1,7 @@
 ﻿
 namespace recipe_scaler
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -39,9 +39,13 @@ namespace recipe_scaler
             this.amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnPiece = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelWishlist = new System.Windows.Forms.Label();
             this.comboItems = new System.Windows.Forms.ComboBox();
+            this.btnItemDB = new System.Windows.Forms.Button();
+            this.labelScale = new System.Windows.Forms.Label();
+            this.numericUpDownScale = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScale)).BeginInit();
             this.SuspendLayout();
             // 
             // btnLiquid
@@ -138,15 +142,15 @@ namespace recipe_scaler
             this.btnPiece.UseVisualStyleBackColor = true;
             this.btnPiece.Click += new System.EventHandler(this.btnPiece_Click);
             // 
-            // label1
+            // labelWishlist
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(333, 128);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(143, 65);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Saker jag önskar den gjorde:\r\navrundade någorlunda.\r\nskalade recept\r\ntog bort ing" +
-    "redienser\r\nsparade recept\r\n";
+            this.labelWishlist.AutoSize = true;
+            this.labelWishlist.Location = new System.Drawing.Point(333, 128);
+            this.labelWishlist.Name = "labelWishlist";
+            this.labelWishlist.Size = new System.Drawing.Size(143, 65);
+            this.labelWishlist.TabIndex = 7;
+            this.labelWishlist.Text = "Saker jag önskar den gjorde:\r\nvolym till vikt\r\nskalade recept\r\ntog bort ingredien" +
+    "ser\r\nsparade recept\r\n";
             // 
             // comboItems
             // 
@@ -159,13 +163,58 @@ namespace recipe_scaler
             this.comboItems.Sorted = true;
             this.comboItems.TabIndex = 9;
             // 
-            // Form1
+            // btnItemDB
+            // 
+            this.btnItemDB.Location = new System.Drawing.Point(336, 270);
+            this.btnItemDB.Name = "btnItemDB";
+            this.btnItemDB.Size = new System.Drawing.Size(75, 23);
+            this.btnItemDB.TabIndex = 10;
+            this.btnItemDB.Text = "Item DB";
+            this.btnItemDB.UseVisualStyleBackColor = true;
+            this.btnItemDB.Click += new System.EventHandler(this.btnItemDB_Click);
+            // 
+            // labelScale
+            // 
+            this.labelScale.AutoSize = true;
+            this.labelScale.Location = new System.Drawing.Point(336, 338);
+            this.labelScale.Name = "labelScale";
+            this.labelScale.Size = new System.Drawing.Size(94, 13);
+            this.labelScale.TabIndex = 11;
+            this.labelScale.Text = "Scale, percentage";
+            // 
+            // numericUpDownScale
+            // 
+            this.numericUpDownScale.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownScale.Location = new System.Drawing.Point(339, 355);
+            this.numericUpDownScale.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDownScale.Name = "numericUpDownScale";
+            this.numericUpDownScale.Size = new System.Drawing.Size(175, 20);
+            this.numericUpDownScale.TabIndex = 12;
+            this.numericUpDownScale.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownScale.ValueChanged += new System.EventHandler(this.numericUpDownScale_ValueChanged);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(526, 516);
+            this.Controls.Add(this.numericUpDownScale);
+            this.Controls.Add(this.labelScale);
+            this.Controls.Add(this.btnItemDB);
             this.Controls.Add(this.comboItems);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelWishlist);
             this.Controls.Add(this.btnPiece);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.btnSystem);
@@ -173,9 +222,10 @@ namespace recipe_scaler
             this.Controls.Add(this.textAmount);
             this.Controls.Add(this.textItem);
             this.Controls.Add(this.btnLiquid);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "MainForm";
+            this.Text = "Recipe";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScale)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,8 +243,11 @@ namespace recipe_scaler
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn amount;
         private System.Windows.Forms.DataGridViewTextBoxColumn unit;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelWishlist;
         private System.Windows.Forms.ComboBox comboItems;
+        private System.Windows.Forms.Button btnItemDB;
+        private System.Windows.Forms.Label labelScale;
+        private System.Windows.Forms.NumericUpDown numericUpDownScale;
     }
 }
 
