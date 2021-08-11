@@ -147,10 +147,10 @@ namespace recipe_scaler
             this.labelWishlist.AutoSize = true;
             this.labelWishlist.Location = new System.Drawing.Point(333, 128);
             this.labelWishlist.Name = "labelWishlist";
-            this.labelWishlist.Size = new System.Drawing.Size(143, 65);
+            this.labelWishlist.Size = new System.Drawing.Size(143, 52);
             this.labelWishlist.TabIndex = 7;
-            this.labelWishlist.Text = "Saker jag önskar den gjorde:\r\nvolym till vikt\r\nskalade recept\r\ntog bort ingredien" +
-    "ser\r\nsparade recept\r\n";
+            this.labelWishlist.Text = "Saker jag önskar den gjorde:\r\nvolym till vikt\r\ntog bort ingredienser\r\nsparade rec" +
+    "ept\r\n";
             // 
             // comboItems
             // 

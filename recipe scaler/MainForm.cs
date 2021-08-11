@@ -156,7 +156,7 @@ namespace recipe_scaler
             {
                 StreamWriter sw = new StreamWriter(ITEMSFILE, true, encoding);
 
-                sw.WriteLine(textItem.Text + ";");
+                sw.WriteLine(textItem.Text + ";0");
                 sw.Close();
                 loadFiles();
 
