@@ -121,9 +121,13 @@ namespace recipe_scaler
             if (findIngredientID(name) != -1)
                 return;
 
-            StreamWriter sw = new StreamWriter(ITEMSFILE, true, encoding);
+            ingredients.Add(new Ingredient(name, weight));
 
-            sw.WriteLine(name + ";" + weight);
+            StreamWriter sw = new StreamWriter(ITEMSFILE, false, encoding);
+
+            foreach(Ingredient ingredient in ingredients)
+                sw.WriteLine(ingredient.name + ";" + ingredient.weight);
+
             sw.Close();
         }
 

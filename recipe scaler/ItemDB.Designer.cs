@@ -29,7 +29,7 @@ namespace recipe_scaler
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBoxIngredients = new System.Windows.Forms.ComboBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.labelWeight = new System.Windows.Forms.Label();
@@ -40,14 +40,14 @@ namespace recipe_scaler
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
-            // comboBox1
+            // comboBoxIngredients
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(12, 12);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(294, 21);
-            this.comboBox1.TabIndex = 0;
+            this.comboBoxIngredients.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxIngredients.FormattingEnabled = true;
+            this.comboBoxIngredients.Location = new System.Drawing.Point(12, 12);
+            this.comboBoxIngredients.Name = "comboBoxIngredients";
+            this.comboBoxIngredients.Size = new System.Drawing.Size(294, 21);
+            this.comboBoxIngredients.TabIndex = 0;
             // 
             // numericUpDown1
             // 
@@ -110,11 +110,12 @@ namespace recipe_scaler
             this.Controls.Add(this.labelWeight);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.comboBoxIngredients);
             this.Name = "ItemDB";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ItemDB";
             this.Load += new System.EventHandler(this.ItemDB_Load);
+            this.Shown += new System.EventHandler(this.ItemDB_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
@@ -124,7 +125,7 @@ namespace recipe_scaler
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBoxIngredients;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelWeight;

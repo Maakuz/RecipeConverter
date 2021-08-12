@@ -21,5 +21,11 @@ namespace recipe_scaler
         {
 
         }
+
+        private void ItemDB_Shown(object sender, EventArgs e)
+        {
+            comboBoxIngredients.Items.Clear();
+            comboBoxIngredients.Items.AddRange(DBHandler.getRange<Ingredient>().ToArray());
+        }
     }
 }
