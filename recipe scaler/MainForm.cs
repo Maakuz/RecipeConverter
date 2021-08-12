@@ -11,8 +11,8 @@ namespace recipe_scaler
 {
     public partial class MainForm : Form
     {
-        const double MLINCUP = 236.588237;
-        const double GINOZ = 28.3495231;
+        const decimal MLINCUP = 236.588237M;
+        const decimal GINOZ = 28.3495231M;
         decimal prevPercentage = 100;
 
         public MainForm()
@@ -49,12 +49,83 @@ namespace recipe_scaler
 
         private decimal scaleTo100Percentage(decimal value)
         {
-            return value / this.prevPercentage * 100;
+            return value / this.prevPercentage * 100M;
         }
 
         private decimal scaleTo100Percentage(object value)
         {
-            return decimal.Parse(value.ToString()) / this.prevPercentage * 100;
+            return decimal.Parse(value.ToString()) / this.prevPercentage * 100M;
+        }
+
+        //Converts between inperial and metric
+        private void convertSystem(DataGridViewRow dataGridViewRow)
+        {
+            string unit = (string)dataGridViewRow.Cells[2].Value;
+            decimal val = decimal.Parse(dataGridViewRow.Cells[1].Value.ToString());
+            if (unit == "ml")
+            {
+                dataGridViewRow.Cells[2].Value = "cups";
+                dataGridViewRow.Cells[1].Value = Math.Round(val / MLINCUP, 2);
+            }
+
+            else if (unit == "cups")
+            {
+                dataGridViewRow.Cells[2].Value = "ml";
+                dataGridViewRow.Cells[1].Value = Math.Round(val * MLINCUP);
+            }
+
+            else if (unit == "g")
+            {
+
+                dataGridViewRow.Cells[2].Value = "oz";
+                dataGridViewRow.Cells[1].Value = Math.Round(val / GINOZ, 2);
+
+            }
+
+            else if (unit == "oz")
+            {
+                dataGridViewRow.Cells[2].Value = "g";
+                dataGridViewRow.Cells[1].Value = Math.Round(val * GINOZ);
+            }
+        }
+
+        //Converts between g and ml or oz and cups
+        private void convertUnit(DataGridViewRow dataGridViewRow)
+        {
+            decimal weight = DBHandler.GetIngredient(dataGridViewRow.Cells[0].Value.ToString()).weight / 100M;
+
+            if (weight < 0.0001M)
+                return;
+
+            string unit = (string)dataGridViewRow.Cells[2].Value;
+            bool systemChanged = false;
+
+            if (unit == "cups" || unit == "oz")
+            {
+                convertSystem(dataGridViewRow);
+                unit = (string)dataGridViewRow.Cells[2].Value;
+
+                systemChanged = true;
+            }
+
+            decimal val = decimal.Parse(dataGridViewRow.Cells[1].Value.ToString());
+
+
+
+            if (unit == "ml")
+            {
+                dataGridViewRow.Cells[2].Value = "g";
+                dataGridViewRow.Cells[1].Value = Math.Round(weight * val, 2);
+            }
+
+            else if (unit == "g")
+            {
+                dataGridViewRow.Cells[2].Value = "ml";
+                dataGridViewRow.Cells[1].Value = Math.Round(val * (1 / weight), 2);
+            }
+
+            if (systemChanged)
+                convertSystem(dataGridViewRow);
         }
 
         private void btnLiquid_Click(object sender, EventArgs e)
@@ -93,36 +164,9 @@ namespace recipe_scaler
             }
 
             //conversion
-
             foreach (DataGridViewRow dataGridViewRow in dataGridView.Rows)
             {
-                string unit = (string)dataGridViewRow.Cells[2].Value;
-                double val = Double.Parse(dataGridViewRow.Cells[1].Value.ToString());
-                if (unit == "ml")
-                {
-                    dataGridViewRow.Cells[2].Value = "cups";
-                    dataGridViewRow.Cells[1].Value = Math.Round(val / MLINCUP, 2);
-                }
-
-                else if (unit == "cups")
-                {
-                    dataGridViewRow.Cells[2].Value = "ml";
-                    dataGridViewRow.Cells[1].Value = Math.Round(val * MLINCUP);
-                }
-
-                else if (unit == "g")
-                {
-                    
-                    dataGridViewRow.Cells[2].Value = "oz";
-                    dataGridViewRow.Cells[1].Value = Math.Round(val / GINOZ, 2);
-                    
-                }
-
-                else if (unit == "oz")
-                {
-                    dataGridViewRow.Cells[2].Value = "g";
-                    dataGridViewRow.Cells[1].Value = Math.Round(val * GINOZ);
-                }
+                convertSystem(dataGridViewRow);
             }
         }
 
@@ -130,10 +174,25 @@ namespace recipe_scaler
         {
             if (e.Button == MouseButtons.Right && e.RowIndex > -1)
             {
-                dataGridView.Rows.RemoveAt(e.RowIndex);
+                ContextMenu cm = new ContextMenu();
+                string unit = dataGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
+                string text = unit == "ml" || unit == "cups" ? "Change to weight" : "Change to volume";
 
-                textItem.Text = e.RowIndex.ToString();
+                Action<object, EventArgs> cmChangeUnit = (routedSender, routedArgs) => { cm_clickChangeUnit(routedSender, routedArgs, e.RowIndex); }; 
+                cm.MenuItems.Add(new MenuItem(text, new EventHandler(cmChangeUnit)));
+
+                Action<object, EventArgs> cmRemove = (routedSender, routedArgs) => { dataGridView.Rows.RemoveAt(e.RowIndex); };
+                cm.MenuItems.Add(new MenuItem("Remove", new EventHandler(cmRemove)));
+
+                //Todo: Maybe make less ugly
+                Point cursor = PointToClient(new Point(MousePosition.X - 20, MousePosition.Y - 30));
+                cm.Show(dataGridView, cursor);
             }
+        }
+
+        private void cm_clickChangeUnit(object sender, EventArgs e, int rowIndex)
+        {
+            convertUnit(dataGridView.Rows[rowIndex]);
         }
 
         private void textItem_Enter(object sender, EventArgs e)
