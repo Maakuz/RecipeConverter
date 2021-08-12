@@ -191,7 +191,7 @@ namespace recipe_scaler
             List<Component> components = new List<Component>();
             foreach (DataGridViewRow rows in this.dataGridView.Rows)
             {
-                Ingredient ingredient = DBHandler.Ingredients[DBHandler.findIngredientID(rows.Cells[0].Value.ToString())];
+                Ingredient ingredient = DBHandler.GetIngredient(rows.Cells[0].Value.ToString());
                 components.Add(new Component(ingredient, scaleTo100Percentage(rows.Cells[1].Value), rows.Cells[2].Value.ToString()));
             }
 

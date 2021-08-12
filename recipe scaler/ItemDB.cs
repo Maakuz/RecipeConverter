@@ -27,5 +27,21 @@ namespace recipe_scaler
             comboBoxIngredients.Items.Clear();
             comboBoxIngredients.Items.AddRange(DBHandler.getRange<Ingredient>().ToArray());
         }
+
+        private void comboBoxIngredients_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            labelWeight.Text = DBHandler.GetIngredient(comboBoxIngredients.SelectedItem.ToString()).weight.ToString();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (comboBoxIngredients.SelectedIndex == -1)
+                return;
+
+            decimal modifier = 100 / numericUpDownAmount.Value;
+
+            DBHandler.updateIngredient(comboBoxIngredients.SelectedItem.ToString(), modifier * numericUpDownWeight.Value);
+            labelWeight.Text = DBHandler.GetIngredient(comboBoxIngredients.SelectedItem.ToString()).weight.ToString();
+        }
     }
 }

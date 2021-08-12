@@ -63,6 +63,16 @@ namespace recipe_scaler
             sr.Close();
         }
 
+        private static void saveItemFile()
+        {
+            StreamWriter sw = new StreamWriter(ITEMSFILE, false, encoding);
+
+            foreach (Ingredient ingredient in ingredients)
+                sw.WriteLine(ingredient.name + ";" + ingredient.weight);
+
+            sw.Close();
+        }
+
         public static void loadRecipeFile()
         {
             recipes.Clear();
@@ -116,6 +126,28 @@ namespace recipe_scaler
             return id;
         }
 
+        public static Ingredient GetIngredient(string name)
+        {
+            Ingredient ingredient = new Ingredient("Not found", 0);
+            int id = findIngredientID(name);
+
+            if (id != -1)
+                ingredient = ingredients[id];
+
+            return ingredient;
+        }
+
+        public static void updateIngredient(string name, decimal weight)
+        {
+            int id = findIngredientID(name);
+            if (id == -1)
+                return;
+
+            ingredients[id] = new Ingredient(name, weight);
+
+            saveItemFile();
+        }
+
         public static void addIngredient(string name, decimal weight = 0)
         {
             if (findIngredientID(name) != -1)
@@ -123,12 +155,7 @@ namespace recipe_scaler
 
             ingredients.Add(new Ingredient(name, weight));
 
-            StreamWriter sw = new StreamWriter(ITEMSFILE, false, encoding);
-
-            foreach(Ingredient ingredient in ingredients)
-                sw.WriteLine(ingredient.name + ";" + ingredient.weight);
-
-            sw.Close();
+            saveItemFile();
         }
 
         public static void addRecipe(Recipe recipe)
