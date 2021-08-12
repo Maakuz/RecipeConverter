@@ -44,6 +44,12 @@ namespace recipe_scaler
             this.btnItemDB = new System.Windows.Forms.Button();
             this.labelScale = new System.Windows.Forms.Label();
             this.numericUpDownScale = new System.Windows.Forms.NumericUpDown();
+            this.btnSaveRecipe = new System.Windows.Forms.Button();
+            this.textBoxRecipeName = new System.Windows.Forms.TextBox();
+            this.comboRecipes = new System.Windows.Forms.ComboBox();
+            this.btnLoadRecipe = new System.Windows.Forms.Button();
+            this.textDescription = new System.Windows.Forms.RichTextBox();
+            this.labelTutorial = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScale)).BeginInit();
             this.SuspendLayout();
@@ -108,7 +114,7 @@ namespace recipe_scaler
             this.unit});
             this.dataGridView.Location = new System.Drawing.Point(12, 39);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(315, 448);
+            this.dataGridView.Size = new System.Drawing.Size(315, 289);
             this.dataGridView.TabIndex = 5;
             this.dataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_CellMouseClick);
             // 
@@ -147,10 +153,10 @@ namespace recipe_scaler
             this.labelWishlist.AutoSize = true;
             this.labelWishlist.Location = new System.Drawing.Point(333, 128);
             this.labelWishlist.Name = "labelWishlist";
-            this.labelWishlist.Size = new System.Drawing.Size(143, 52);
+            this.labelWishlist.Size = new System.Drawing.Size(183, 65);
             this.labelWishlist.TabIndex = 7;
-            this.labelWishlist.Text = "Saker jag önskar den gjorde:\r\nvolym till vikt\r\ntog bort ingredienser\r\nsparade rec" +
-    "ept\r\n";
+            this.labelWishlist.Text = "Saker jag önskar den gjorde:\r\nvolym till vikt\r\ntog bort ingredienser\r\nuppdaterade" +
+    " recept\r\nSe att ingrediensen finns vid laddning";
             // 
             // comboItems
             // 
@@ -195,6 +201,11 @@ namespace recipe_scaler
             0,
             0,
             0});
+            this.numericUpDownScale.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownScale.Name = "numericUpDownScale";
             this.numericUpDownScale.Size = new System.Drawing.Size(175, 20);
             this.numericUpDownScale.TabIndex = 12;
@@ -205,11 +216,70 @@ namespace recipe_scaler
             0});
             this.numericUpDownScale.ValueChanged += new System.EventHandler(this.numericUpDownScale_ValueChanged);
             // 
+            // btnSaveRecipe
+            // 
+            this.btnSaveRecipe.Location = new System.Drawing.Point(248, 455);
+            this.btnSaveRecipe.Name = "btnSaveRecipe";
+            this.btnSaveRecipe.Size = new System.Drawing.Size(79, 23);
+            this.btnSaveRecipe.TabIndex = 14;
+            this.btnSaveRecipe.Text = "Save Recipe";
+            this.btnSaveRecipe.UseVisualStyleBackColor = true;
+            this.btnSaveRecipe.Click += new System.EventHandler(this.btnSaveRecipe_Click);
+            // 
+            // textBoxRecipeName
+            // 
+            this.textBoxRecipeName.Location = new System.Drawing.Point(12, 457);
+            this.textBoxRecipeName.Name = "textBoxRecipeName";
+            this.textBoxRecipeName.Size = new System.Drawing.Size(230, 20);
+            this.textBoxRecipeName.TabIndex = 13;
+            // 
+            // comboRecipes
+            // 
+            this.comboRecipes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboRecipes.FormattingEnabled = true;
+            this.comboRecipes.Location = new System.Drawing.Point(12, 483);
+            this.comboRecipes.Name = "comboRecipes";
+            this.comboRecipes.Size = new System.Drawing.Size(230, 21);
+            this.comboRecipes.TabIndex = 15;
+            // 
+            // btnLoadRecipe
+            // 
+            this.btnLoadRecipe.Location = new System.Drawing.Point(248, 481);
+            this.btnLoadRecipe.Name = "btnLoadRecipe";
+            this.btnLoadRecipe.Size = new System.Drawing.Size(79, 23);
+            this.btnLoadRecipe.TabIndex = 16;
+            this.btnLoadRecipe.Text = "Load Recipe";
+            this.btnLoadRecipe.UseVisualStyleBackColor = true;
+            this.btnLoadRecipe.Click += new System.EventHandler(this.btnLoadRecipe_Click);
+            // 
+            // textDescription
+            // 
+            this.textDescription.Location = new System.Drawing.Point(12, 357);
+            this.textDescription.Name = "textDescription";
+            this.textDescription.Size = new System.Drawing.Size(315, 96);
+            this.textDescription.TabIndex = 17;
+            this.textDescription.Text = "";
+            // 
+            // labelTutorial
+            // 
+            this.labelTutorial.AutoSize = true;
+            this.labelTutorial.Location = new System.Drawing.Point(12, 341);
+            this.labelTutorial.Name = "labelTutorial";
+            this.labelTutorial.Size = new System.Drawing.Size(42, 13);
+            this.labelTutorial.TabIndex = 18;
+            this.labelTutorial.Text = "Tutorial";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(526, 516);
+            this.Controls.Add(this.labelTutorial);
+            this.Controls.Add(this.textDescription);
+            this.Controls.Add(this.btnLoadRecipe);
+            this.Controls.Add(this.comboRecipes);
+            this.Controls.Add(this.btnSaveRecipe);
+            this.Controls.Add(this.textBoxRecipeName);
             this.Controls.Add(this.numericUpDownScale);
             this.Controls.Add(this.labelScale);
             this.Controls.Add(this.btnItemDB);
@@ -248,6 +318,12 @@ namespace recipe_scaler
         private System.Windows.Forms.Button btnItemDB;
         private System.Windows.Forms.Label labelScale;
         private System.Windows.Forms.NumericUpDown numericUpDownScale;
+        private System.Windows.Forms.Button btnSaveRecipe;
+        private System.Windows.Forms.TextBox textBoxRecipeName;
+        private System.Windows.Forms.ComboBox comboRecipes;
+        private System.Windows.Forms.Button btnLoadRecipe;
+        private System.Windows.Forms.RichTextBox textDescription;
+        private System.Windows.Forms.Label labelTutorial;
     }
 }
 

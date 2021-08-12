@@ -11,23 +11,53 @@ namespace recipe_scaler
 {
     public partial class MainForm : Form
     {
+        struct Component
+        {
+            public string name;
+            public decimal quantity;
+            public string unit;
+
+            public Component(string name, decimal quantity, string unit)
+            {
+                this.name = name;
+                this.quantity = quantity;
+                this.unit = unit;
+            }
+        }
+
+        struct Recipe
+        {
+            public string name;
+            public List<Component> ingredients;
+            public string desc;
+
+            public Recipe(string name, List<Component> ingredients, string desc)
+            {
+                this.name = name;
+                this.ingredients = ingredients;
+                this.desc = desc;
+            }
+        }
 
         const double MLINCUP = 236.588237;
         const double GINOZ = 28.3495231;
         const string ITEMSFILE = "items.db";
+        const string RECIPEFILE = "Recipes.db";
         readonly Encoding encoding = Encoding.UTF8;
         decimal prevPercentage = 100;
-        
-        
-        
+
+
+
+        List<Recipe> recipes = new List<Recipe>();
 
         public MainForm()
         {
             InitializeComponent();
-            loadFiles();
+            loadItemFile();
+            loadRecipeFile();
         }
 
-        private void loadFiles()
+        private void loadItemFile()
         {
             if (!File.Exists(ITEMSFILE))
                 return;
@@ -49,7 +79,57 @@ namespace recipe_scaler
 
             comboItems.Items.Clear();
             comboItems.Items.AddRange(items.ToArray());
+        }
 
+        private void loadRecipeFile()
+        {
+            if (!File.Exists(RECIPEFILE))
+                return;
+
+            recipes.Clear();
+            StreamReader sr = new StreamReader(RECIPEFILE, encoding);
+
+            string item = sr.ReadLine();
+            while (item != null)
+            {
+                string name = item;
+
+                item = sr.ReadLine();
+                List<Component> ingredients = new List<Component>();
+                while (item != "[ITEMEND]")
+                {
+                    string[] strings = item.Split(';');
+
+                    ingredients.Add(new Component(strings[0], decimal.Parse(strings[1]), strings[2]));
+                    item = sr.ReadLine();
+                }
+
+                item = sr.ReadLine();
+                string desc = "";
+                while (item != "[END]")
+                {
+                    desc += item + "\r\n";
+                    item = sr.ReadLine();
+                }
+
+                 desc = desc.Substring(0, desc.Length - 2);
+
+                this.recipes.Add(new Recipe(name, ingredients, desc));
+
+                
+                item = sr.ReadLine();
+            }
+            sr.Close();
+
+            comboRecipes.Items.Clear();
+
+            List<string> range = new List<string>();
+            foreach (Recipe recipe in recipes)
+            {
+                range.Add(recipe.name);
+            }
+
+            comboRecipes.Items.AddRange(range.ToArray());
         }
 
         private void addItem(string unit)
@@ -57,6 +137,16 @@ namespace recipe_scaler
             textAmount.Text = textAmount.Text.Replace('.', ',');
             if (Double.TryParse(textAmount.Text, out _) && comboItems.Text.Length > 0)
                 dataGridView.Rows.Add(comboItems.Text, textAmount.Text, unit);
+        }
+
+        private decimal scaleTo100Percentage(decimal value)
+        {
+            return value / this.prevPercentage * 100;
+        }
+
+        private decimal scaleTo100Percentage(object value)
+        {
+            return decimal.Parse(value.ToString()) / this.prevPercentage * 100;
         }
 
         private void btnLiquid_Click(object sender, EventArgs e)
@@ -158,7 +248,7 @@ namespace recipe_scaler
 
                 sw.WriteLine(textItem.Text + ";0");
                 sw.Close();
-                loadFiles();
+                loadItemFile();
 
                 comboItems.SelectedItem = textItem.Text;
 
@@ -180,12 +270,50 @@ namespace recipe_scaler
         {
             foreach (DataGridViewRow row in this.dataGridView.Rows)
             {
-                decimal orig = Decimal.Parse(row.Cells[1].Value.ToString()) / this.prevPercentage * (decimal)100;
+                decimal orig = scaleTo100Percentage(row.Cells[1].Value);
                 row.Cells[1].Value = Math.Round(orig * this.numericUpDownScale.Value * (decimal)0.01, 2);
             }
 
 
             prevPercentage = this.numericUpDownScale.Value;
+        }
+
+        private void btnSaveRecipe_Click(object sender, EventArgs e)
+        {
+            StreamWriter sw = new StreamWriter(RECIPEFILE, true, encoding);
+            sw.WriteLine(textBoxRecipeName.Text);
+
+            foreach (DataGridViewRow rows in this.dataGridView.Rows)
+            {
+                sw.WriteLine(rows.Cells[0].Value + ";" + scaleTo100Percentage(rows.Cells[1].Value) + ";" + rows.Cells[2].Value + ";");
+            }
+            
+            sw.WriteLine("[ITEMEND]");
+
+            sw.WriteLine(textDescription.Text);
+
+            sw.WriteLine("[END]");
+            sw.Close();
+
+            loadRecipeFile();
+        }
+
+        private void btnLoadRecipe_Click(object sender, EventArgs e)
+        {
+            if (comboRecipes.SelectedIndex == -1)
+                return;
+
+            prevPercentage = 100;
+            this.numericUpDownScale.Value = 100;
+
+            this.dataGridView.Rows.Clear();
+
+            foreach (Component component in this.recipes[comboRecipes.SelectedIndex].ingredients)
+            {
+                this.dataGridView.Rows.Add(component.name, component.quantity, component.unit);
+            }
+
+            textDescription.Text = this.recipes[comboRecipes.SelectedIndex].desc;
         }
     }
 }
