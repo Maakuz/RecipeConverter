@@ -11,125 +11,33 @@ namespace recipe_scaler
 {
     public partial class MainForm : Form
     {
-        struct Component
-        {
-            public string name;
-            public decimal quantity;
-            public string unit;
-
-            public Component(string name, decimal quantity, string unit)
-            {
-                this.name = name;
-                this.quantity = quantity;
-                this.unit = unit;
-            }
-        }
-
-        struct Recipe
-        {
-            public string name;
-            public List<Component> ingredients;
-            public string desc;
-
-            public Recipe(string name, List<Component> ingredients, string desc)
-            {
-                this.name = name;
-                this.ingredients = ingredients;
-                this.desc = desc;
-            }
-        }
-
         const double MLINCUP = 236.588237;
         const double GINOZ = 28.3495231;
-        const string ITEMSFILE = "items.db";
-        const string RECIPEFILE = "Recipes.db";
-        readonly Encoding encoding = Encoding.UTF8;
         decimal prevPercentage = 100;
-
-
-
-        List<Recipe> recipes = new List<Recipe>();
 
         public MainForm()
         {
             InitializeComponent();
-            loadItemFile();
-            loadRecipeFile();
+            loadItems();
+            loadRecipes();
         }
 
-        private void loadItemFile()
+        private void loadItems()
         {
-            if (!File.Exists(ITEMSFILE))
-                return;
-
-            StreamReader sr = new StreamReader(ITEMSFILE, encoding);
-
-            string item = sr.ReadLine();
-            List<string> items = new List<string>();
-            List<int> weights = new List<int>();
-            while (item != null)
-            {
-                string[] strings = item.Split(';');
-
-                items.Add(strings[0]);
-                weights.Add(int.Parse(strings[1]));
-                item = sr.ReadLine();
-            }
-            sr.Close();
+            DBHandler.loadItemFile();
 
             comboItems.Items.Clear();
-            comboItems.Items.AddRange(items.ToArray());
+
+            comboItems.Items.AddRange(DBHandler.getRange<Ingredient>().ToArray());
         }
 
-        private void loadRecipeFile()
+        private void loadRecipes()
         {
-            if (!File.Exists(RECIPEFILE))
-                return;
-
-            recipes.Clear();
-            StreamReader sr = new StreamReader(RECIPEFILE, encoding);
-
-            string item = sr.ReadLine();
-            while (item != null)
-            {
-                string name = item;
-
-                item = sr.ReadLine();
-                List<Component> ingredients = new List<Component>();
-                while (item != "[ITEMEND]")
-                {
-                    string[] strings = item.Split(';');
-
-                    ingredients.Add(new Component(strings[0], decimal.Parse(strings[1]), strings[2]));
-                    item = sr.ReadLine();
-                }
-
-                item = sr.ReadLine();
-                string desc = "";
-                while (item != "[END]")
-                {
-                    desc += item + "\r\n";
-                    item = sr.ReadLine();
-                }
-
-                 desc = desc.Substring(0, desc.Length - 2);
-
-                this.recipes.Add(new Recipe(name, ingredients, desc));
-
-                
-                item = sr.ReadLine();
-            }
-            sr.Close();
+            DBHandler.loadRecipeFile();
 
             comboRecipes.Items.Clear();
 
-            List<string> range = new List<string>();
-            foreach (Recipe recipe in recipes)
-            {
-                range.Add(recipe.name);
-            }
-
-            comboRecipes.Items.AddRange(range.ToArray());
+            comboRecipes.Items.AddRange(DBHandler.getRange<Recipe>().ToArray());
         }
 
         private void addItem(string unit)
@@ -244,11 +152,9 @@ namespace recipe_scaler
         {
             if (e.KeyCode == Keys.Enter && textItem.Text.Length > 0)
             {
-                StreamWriter sw = new StreamWriter(ITEMSFILE, true, encoding);
+                DBHandler.addIngredient(textItem.Text, 0);
 
-                sw.WriteLine(textItem.Text + ";0");
-                sw.Close();
-                loadItemFile();
+                loadItems();
 
                 comboItems.SelectedItem = textItem.Text;
 
@@ -280,22 +186,20 @@ namespace recipe_scaler
 
         private void btnSaveRecipe_Click(object sender, EventArgs e)
         {
-            StreamWriter sw = new StreamWriter(RECIPEFILE, true, encoding);
-            sw.WriteLine(textBoxRecipeName.Text);
+            string name = textBoxRecipeName.Text;
 
+            List<Component> components = new List<Component>();
             foreach (DataGridViewRow rows in this.dataGridView.Rows)
             {
-                sw.WriteLine(rows.Cells[0].Value + ";" + scaleTo100Percentage(rows.Cells[1].Value) + ";" + rows.Cells[2].Value + ";");
+                Ingredient ingredient = DBHandler.Ingredients[DBHandler.findIngredientID(rows.Cells[0].Value.ToString())];
+                components.Add(new Component(ingredient, scaleTo100Percentage(rows.Cells[1].Value), rows.Cells[2].Value.ToString()));
             }
-            
-            sw.WriteLine("[ITEMEND]");
 
-            sw.WriteLine(textDescription.Text);
+            string desc = textDescription.Text;
 
-            sw.WriteLine("[END]");
-            sw.Close();
+            DBHandler.addRecipe(new Recipe(name, components, desc));
 
-            loadRecipeFile();
+            loadRecipes();
         }
 
         private void btnLoadRecipe_Click(object sender, EventArgs e)
@@ -308,12 +212,14 @@ namespace recipe_scaler
 
             this.dataGridView.Rows.Clear();
 
-            foreach (Component component in this.recipes[comboRecipes.SelectedIndex].ingredients)
+            Recipe recipe = DBHandler.Recipes[comboRecipes.SelectedIndex];
+
+            foreach (Component component in recipe.components)
             {
-                this.dataGridView.Rows.Add(component.name, component.quantity, component.unit);
+                this.dataGridView.Rows.Add(component.ingredient.name, component.quantity, component.unit);
             }
 
-            textDescription.Text = this.recipes[comboRecipes.SelectedIndex].desc;
+            textDescription.Text = recipe.desc;
         }
     }
 }
